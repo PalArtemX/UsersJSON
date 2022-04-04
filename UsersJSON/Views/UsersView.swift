@@ -12,10 +12,19 @@ struct UsersView: View {
     @EnvironmentObject var userViewModel: UserViewModel
     
     var body: some View {
-        VStack {
-            ForEach(userViewModel.users) { user in
-                Text(user.name)
+        NavigationView {
+            List {
+                ForEach(userViewModel.users) { user in
+                    NavigationLink {
+                        Text(user.website)
+                    } label: {
+                        UserRowView(user: user)
+                    }
+
+                }
             }
+            .listStyle(.sidebar)
+            .navigationTitle("Users")
         }
     }
 }
