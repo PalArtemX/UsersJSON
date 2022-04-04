@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct UsersJSONApp: App {
+    
+    @StateObject var userViewModel = UserViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            UsersView()
+                .environmentObject(userViewModel)
         }
     }
 }
