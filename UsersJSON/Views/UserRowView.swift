@@ -11,15 +11,21 @@ struct UserRowView: View {
     let user: User
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text(user.username)
-                    .font(.headline)
-                Text(user.website)
-                    .foregroundColor(.blue)
+        HStack {
+            Image(systemName: "person.crop.circle.fill")
+                .font(.largeTitle)
+                .symbolRenderingMode(.hierarchical)
+                .foregroundColor(.blue)
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(user.username)
+                        .font(.headline)
+                    Text(user.website)
+                        .foregroundColor(.blue)
+                }
+                Text(user.phone)
+                    .font(.subheadline)
             }
-            Text(user.phone)
-                .font(.subheadline)
         }
     }
 }

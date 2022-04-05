@@ -7,10 +7,14 @@
 
 import Foundation
 import Combine
+import MapKit
 
 
 class UserViewModel: ObservableObject {
     @Published var users: [User] = []
+    
+    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 1.1, longitude: 1.1), span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
+    
     var cancellable = Set<AnyCancellable>()
     
     init() {
@@ -47,4 +51,11 @@ class UserViewModel: ObservableObject {
             }
             .store(in: &cancellable)
     }
+    
+    // MARK: coordinateCenter
+    func coordinateCenter(lat: Double, lon: Double) {
+        region.center.longitude = lon
+        region.center.latitude = lat
+    }
+    
 }

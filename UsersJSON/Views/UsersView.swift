@@ -16,7 +16,7 @@ struct UsersView: View {
             List {
                 ForEach(userViewModel.users) { user in
                     NavigationLink {
-                        Text(user.website)
+                        DetailUserView(user: user)
                     } label: {
                         UserRowView(user: user)
                     }

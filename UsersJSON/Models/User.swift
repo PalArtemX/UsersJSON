@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import MapKit
 
 // MARK: - User
 struct User: Codable, Identifiable {
@@ -30,6 +30,8 @@ struct User: Codable, Identifiable {
     struct Company: Codable {
         let name, catchPhrase, bs: String
     }
+    
+    
 }
 
 
