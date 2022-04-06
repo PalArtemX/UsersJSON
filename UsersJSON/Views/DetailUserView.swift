@@ -19,8 +19,10 @@ struct DetailUserView: View {
             Map(coordinateRegion: $userViewModel.region, annotationItems: userViewModel.users, annotationContent: { loc in
                 MapMarker(coordinate: CLLocationCoordinate2D(latitude: Double(loc.address.geo.lat) ?? 1.1, longitude: Double(loc.address.geo.lng) ?? 1.1), tint: .blue)
             })
-                .ignoresSafeArea()
-                .frame(height: 300)
+            .cornerRadius(25)
+            .ignoresSafeArea()
+            .frame(height: 300)
+            
             
             
             // MARK: - Header

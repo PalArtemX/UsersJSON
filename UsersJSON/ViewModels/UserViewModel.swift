@@ -13,40 +13,21 @@ import MapKit
 class UserViewModel: ObservableObject {
     @Published var users: [User] = []
     
+    @Published var search = ""
     @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 1.1, longitude: 1.1), span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
     
+    private let dataService = UserDataService()
     var cancellable = Set<AnyCancellable>()
     
     init() {
-        load()
+        addSubscribers()
     }
     
     // MARK: - Functions
-    
-    // MARK: load
-    func load() {
-        guard let url = URL(string: "https://jsonplaceholder.typicode.com/users/") else { return }
-        
-        URLSession.shared.dataTaskPublisher(for: url)
-            .tryMap { (output) -> Data in
-                guard
-                    let response = output.response as? HTTPURLResponse,
-                    response.statusCode >= 200 && response.statusCode < 300 else {
-                    throw URLError(.badServerResponse)
-                }
-                return output.data
-            }
-            .decode(type: [User].self, decoder: JSONDecoder())
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Completion is finished")
-                case .failure(let error):
-                    print("Error \(error.localizedDescription)")
-                }
-            } receiveValue: { [weak self] returnedUsers in
+    // MARK: addSubscribers
+    func addSubscribers() {
+        dataService.$users
+            .sink { [weak self] returnedUsers in
                 self?.users = returnedUsers
             }
             .store(in: &cancellable)
@@ -57,5 +38,27 @@ class UserViewModel: ObservableObject {
         region.center.longitude = lon
         region.center.latitude = lat
     }
+    
+    // MARK: filterUser
+    func filterUser() {
+        $search
+            .combineLatest($users)
+            .map { (text, user) -> [User] in
+                guard !text.isEmpty else {
+                    return user
+                }
+                let lowercasedText = text.lowercased()
+                return user.filter { user in
+                    return user.username.lowercased().contains(lowercasedText)
+                }
+                
+            }
+            .sink { [weak self] returnUsers in
+                self?.users = returnUsers
+            }
+            .store(in: &cancellable)
+    }
+    
+
     
 }

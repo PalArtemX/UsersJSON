@@ -13,18 +13,32 @@ struct UsersView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(userViewModel.users) { user in
-                    NavigationLink {
-                        DetailUserView(user: user)
-                    } label: {
-                        UserRowView(user: user)
-                    }
-
+            VStack {
+                // MARK: - TextField
+                TextField("search", text: $userViewModel.search)
+                    .textFieldStyle(.roundedBorder)
+                .padding()
+                
+                Button {
+                    
+                } label: {
+                    Image(systemName: "plus")
                 }
+                
+                // MARK: - List
+                List {
+                    ForEach(userViewModel.users) { user in
+                        NavigationLink {
+                            DetailUserView(user: user)
+                        } label: {
+                            UserRowView(user: user)
+                        }
+                        
+                    }
+                }
+                .listStyle(.sidebar)
+                .navigationTitle("Users")
             }
-            .listStyle(.sidebar)
-            .navigationTitle("Users")
         }
     }
 }
