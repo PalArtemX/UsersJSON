@@ -71,6 +71,7 @@
 				F8AC8D6C27FB6F5D00908433 /* Models */,
 				F8BE371927FDE56300764EB0 /* Services */,
 				F8BE371C27FDEC3900764EB0 /* Utilities */,
+				F8BE371F27FDF13000764EB0 /* Errors */,
 				F846B91827FB64F9001E6476 /* Assets.xcassets */,
 				F846B91A27FB64F9001E6476 /* Preview Content */,
 			);
@@ -126,6 +127,13 @@
 				F8BE371D27FDEC7E00764EB0 /* NetworkingManager.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		F8BE371F27FDF13000764EB0 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Errors;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
