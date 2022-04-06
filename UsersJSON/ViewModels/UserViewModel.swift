@@ -14,7 +14,9 @@ class UserViewModel: ObservableObject {
     @Published var users: [User] = []
     
     @Published var search = ""
-    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 1.1, longitude: 1.1), span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
+    @Published var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 1.1, longitude: 1.1),
+        span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
     
     private let dataService = UserDataService()
     var cancellable = Set<AnyCancellable>()

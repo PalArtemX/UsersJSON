@@ -21,29 +21,14 @@ class UserDataService {
     private func getUsers() {
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/users/") else { return }
         
-        URLSession.shared.dataTaskPublisher(for: url)
-            .tryMap { (output) -> Data in
-                guard
-                    let response = output.response as? HTTPURLResponse,
-                    response.statusCode >= 200 && response.statusCode < 300 else {
-                    throw URLError(.badServerResponse)
-                }
-                return output.data
-            }
+        NetworkingManager.download(url: url)
             .decode(type: [User].self, decoder: JSONDecoder())
             .eraseToAnyPublisher()
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    print("Completion finished")
-                case .failure(let error):
-                    print("Error \(error.localizedDescription)")
-                }
-            } receiveValue: { [weak self] returnedUsers in
-                self?.users = returnedUsers
-            }
+            .sink(receiveCompletion: NetworkingManager.handleCompletion, receiveValue: { [weak self] returnedUser in
+                self?.users = returnedUser
+            })
+            
             .store(in: &cancellable)
-
     }
+    
 }
