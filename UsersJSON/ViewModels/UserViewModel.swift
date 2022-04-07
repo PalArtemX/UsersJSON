@@ -18,8 +18,9 @@ class UserViewModel: ObservableObject {
         center: CLLocationCoordinate2D(latitude: 1.1, longitude: 1.1),
         span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
     
-    private let dataService = UserDataService()
     var cancellable = Set<AnyCancellable>()
+    
+    private let dataService = UserDataService()
     
     init() {
         addSubscribers()
@@ -28,7 +29,11 @@ class UserViewModel: ObservableObject {
     // MARK: - Functions
     // MARK: addSubscribers
     func addSubscribers() {
-        dataService.$users
+        
+        // Search and update all Users
+        $search
+            .combineLatest(dataService.$users)
+            .map(filterCoins)
             .sink { [weak self] returnedUsers in
                 self?.users = returnedUsers
             }
@@ -41,26 +46,16 @@ class UserViewModel: ObservableObject {
         region.center.latitude = lat
     }
     
-    // MARK: filterUser
-    func filterUser() {
-        $search
-            .combineLatest($users)
-            .map { (text, user) -> [User] in
-                guard !text.isEmpty else {
-                    return user
-                }
-                let lowercasedText = text.lowercased()
-                return user.filter { user in
-                    return user.username.lowercased().contains(lowercasedText)
-                }
-                
-            }
-            .sink { [weak self] returnUsers in
-                self?.users = returnUsers
-            }
-            .store(in: &cancellable)
+    
+    
+    // MARK: filterCoins
+    private func filterCoins(text: String, users: [User]) -> [User] {
+        guard !text.isEmpty else {
+            return users
+        }
+        let lowercasedText = text.lowercased()
+        return users.filter { user in
+            return user.username.lowercased().contains(lowercasedText)
+        }
     }
-    
-
-    
 }
