@@ -19,10 +19,22 @@ struct UsersView: View {
                     .textFieldStyle(.roundedBorder)
                 .padding()
                 
-                Button {
-                    
-                } label: {
-                    Image(systemName: "plus")
+                // MARK: - Button Sort
+                HStack {
+                    Button {
+                        withAnimation(.default) {
+                            userViewModel.showSort.toggle()
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: userViewModel.showSort ? "chevron.down.circle" : "circle")
+                                .symbolRenderingMode(.hierarchical)
+                            Text("Sort")
+                        }
+                        .font(.headline)
+                    }
+                    .padding(.horizontal)
+                    Spacer()
                 }
                 
                 // MARK: - List

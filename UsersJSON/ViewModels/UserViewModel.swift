@@ -13,6 +13,7 @@ import MapKit
 class UserViewModel: ObservableObject {
     @Published var users: [User] = []
     
+    @Published var showSort = false
     @Published var search = ""
     @Published var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 1.1, longitude: 1.1),
@@ -33,7 +34,16 @@ class UserViewModel: ObservableObject {
         // Search and update all Users
         $search
             .combineLatest(dataService.$users)
-            .map(filterCoins)
+            .map(filterUsers)
+            .sink { [weak self] returnedUsers in
+                self?.users = returnedUsers
+            }
+            .store(in: &cancellable)
+        
+        
+        $showSort
+            .combineLatest(dataService.$users)
+            .map(sortUsers)
             .sink { [weak self] returnedUsers in
                 self?.users = returnedUsers
             }
@@ -48,14 +58,23 @@ class UserViewModel: ObservableObject {
     
     
     
-    // MARK: filterCoins
-    private func filterCoins(text: String, users: [User]) -> [User] {
+    // MARK: filterUsers
+    private func filterUsers(text: String, users: [User]) -> [User] {
         guard !text.isEmpty else {
             return users
         }
         let lowercasedText = text.lowercased()
         return users.filter { user in
             return user.username.lowercased().contains(lowercasedText)
+        }
+    }
+    
+    // MARK: SortUsers
+    private func sortUsers(showSort: Bool, users: [User]) -> [User] {
+        if showSort {
+            return users.sorted { $0.username < $1.username }
+        } else {
+            return users
         }
     }
 }
