@@ -20,7 +20,6 @@ class UserViewModel: ObservableObject {
         span: MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1))
     
     var cancellable = Set<AnyCancellable>()
-    
     private let dataService = UserDataService()
     
     init() {
@@ -40,7 +39,7 @@ class UserViewModel: ObservableObject {
             }
             .store(in: &cancellable)
         
-        
+        // Sort
         $showSort
             .combineLatest(dataService.$users)
             .map(sortUsers)
@@ -65,6 +64,7 @@ class UserViewModel: ObservableObject {
         }
         let lowercasedText = text.lowercased()
         return users.filter { user in
+            showSort = false
             return user.username.lowercased().contains(lowercasedText)
         }
     }
